@@ -1,0 +1,56 @@
+Se desea que modele e implemente, en el lenguaje de su elecci´on, un generador de analizadores
+sint´acticos para gram´aticas de operadores:
+
+a) Debe saber manejar s´ımbolos terminales (en min´uscula o signos ascii, menos el marcador de borde $) y
+no terminales (en may´uscula) que se comprenden de un s´olo caracter.
+
+b) Una vez iniciado el programa, pedir´a repetidamente al usuario una acci´on para proceder. Tal acci´on
+puede ser:
+
+1) RULE <no-terminal> [<simbolo>]
+Define una nueva regla en la gram´atica para el s´ımbolo <no-terminal>. La lista de s´ımbolos en
+[<simbolo>] es una lista (potencialmente vac´ıa), separada por espacios, de s´ımbolos terminales o
+no terminales.
+Por ejemplo:
+RULE A a A b — Representa a la regla: A → a A b
+RULE B — Representa a la regla: B → λ
+El programa debe reportar un error e ignorar la acci´on si el s´ımbolo que se coloca del lado izquierdo
+de la regla no es no–terminal o si la regla expresada no corresponde a una gram´atica de operadores.
+
+2) INIT <no-terminal>
+Establece que el s´ımbolo inicial de la gram´atica es el s´ımbolo en <no-terminal>.
+Por ejemplo: INIT B — Establece el s´ımbolo B como s´ımbolo inicial de la gram´atica.
+El programa debe reportar un error e ignorar la acci´on si el s´ımbolo no es no–terminal.
+
+3) PREC <terminal> <op> <terminal>
+Establece la relaci´on entre dos terminales (o $). Esta operaci´on <op> puede ser:
+< cuando el primer terminal tiene menor precedencia que el segundo
+> cuando el primer terminal tiene mayor precedencia que el segundo
+= cuando el primer terminal tiene igual precedencia que el segundo
+Por ejemplo:
+PREC + < * — Establece que + tiene menor precedencia que *
+PREC ( = ) — Establece que ( tiene igual precedencia que )
+PREC $ > n — Establece que $ (marcador de borde) tiene mayor precedencia que n
+El programa debe reportar un error e ignorar la acci´on si los s´ımbolos involucrados no son s´ımbolos
+terminales o si el operador en <op> es inválido.
+
+4) BUILD
+Construye en analizador sint´actico con la informaci´on suministrada hasta el momento.
+Debe reportar los valores calculados para las funciones f y g (vistas en clase) o reportar que construir
+dichas funciones es imposible, mostrando evidencias para ello.
+
+5) PARSE <string>
+Realiza el proceso de an´alisis sint´actico sobre la cadena suministrada en <string>. Debe mostrar
+cada uno de los pasos, incluyendo:
+Pila — Estado actual de la pila
+Entrada — Estado actual de la entrada. Este estado debe mostrar claramente las relaciones de
+precedencias y el punto donde se est´a leyendo actualmente (ver ejemplo).
+Accion — Acci´on tomada (leer o reducir por una regla particular)
+Por ejemplo: PARSE n + n * n — Realizar´a el proceso sobre la cadena n + n * n
+El programa debe reportar un error e ignorar la acci´on si los s´ımbolos involucrados no son s´ımbolos
+terminales, hay s´ımbolos no–comparables o si no ha hecho BUILD previamente. Entre cada para
+de símbolo terminales en <string> puede haber una cantidad cualquiera (potencialmente cero) de
+espacios en blanco.
+
+6) EXIT
+Debe salir del simulador.
