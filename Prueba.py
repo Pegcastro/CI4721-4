@@ -164,22 +164,29 @@ def build():
             print("ERROR: No se pudo construr la gramática")
             break
 
-    # Printing
-    print("Analizador sintáctico construido")
-    print('Valores para f: \n')
-    for key in funcionF:
-        print(key + ': ' + str(funcionF[key].getCaminoMasLargo()))
+    if(isinstance(resultado, int)):
+        # Printing
+        print("Analizador sintáctico construido")
+        print('Valores para f: \n')
+        for key in funcionF:
+            print(key + ': ' + str(funcionF[key].getCaminoMasLargo()))
+        
+        # Printing
+        print('Valores para g: \n')
+        for key in funcionG:
+            print(key + ': ' + str(funcionG[key].getCaminoMasLargo()))
+
+        return True
+    else:
+        return False
     
-    # Printing
-    print('Valores para g: \n')
-    for key in funcionG:
-        print(key + ': ' + str(funcionG[key].getCaminoMasLargo()))
+
     
 def parse(frase):
 
     listaFrase = ['$']
 
-    # Contruccion de la frase
+    # Contruccion de la frase (ya me di cuenta que esto ya no sirve para nada)
     for simbolo in frase:
         ultimoFrase = listaFrase[len(listaFrase)-1]
         if (simbolo in precedencias[ultimoFrase]):
@@ -197,25 +204,40 @@ def parse(frase):
     # Te imprime la frase bien bonita
     print(listaFrase)
 
-    # # Now heavy machine gun
+    # Now heavy machine gun
 
-    # pila = []
-    # entrada = listaFrase
+    pila = []
+    accion = []
     
-    # pila.append(listaFrase[0])
+    pila.append(listaFrase[0])
 
-    # lector = 2
+    lector = 2
 
-    # while(True):
-    #     p = pila[len(pila)-1]
+    while(True):
+        p = pila[len(pila)-1]
 
-    #     if (p == '$' and listaFrase[lector] == '$'):
+        e = listaFrase[lector]
+
+        if (p == '$' and e == '$'):
+            print("Aceptar")
+        elif(precedencias[p][e] == '<' or precedencias[p][e] == '=' ):
+            pila.append(e)
+            lector += 2
+        elif (precedencias[p][e] == '>'):
+            x = pila[len(pila)-1]
+            while(not precedencias[pila[len(pila)-1]][x]):
+                x = pila.pop()
+            accion += [x+" -> "+reglas[x]]
+        else:
+            print("ERROR")
             
 
 
 
 
 # ==============================================================================
+
+buildeado = False
 
 while (exit):
 
@@ -231,7 +253,7 @@ while (exit):
 
         # Accion: BUILD
         elif(instruccion[0] == "BUILD"):
-            build()
+            buildeado = build()
         else:
             print("ERROR")
 
@@ -284,6 +306,8 @@ while (exit):
             frase = ''.join(instruccion[1:])
             if(not isValidTerminal(frase)):
                 print("La frase suministrada no está conformada por solo símbolos terminales")
+            elif(not buildeado):
+                print("Tiene que buildear primero")
             else: 
                 parse(frase)
         else:
